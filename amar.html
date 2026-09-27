@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التعليميات التطبيقية التفاعلية</title>
+    <!-- خط كايرو المتميز -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- مكتبة أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --secondary: #00cec9;
+            --accent-pink: #fd79a8;
+            --accent-yellow: #fdcb6e;
+            --emerald: #00b894;
+            --dark: #2d3436;
+            --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            --card-shadow: 0 15px 35px rgba(108, 92, 231, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--dark);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        /* الهيدر وشريط التقدم */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        header p {
+            color: #636e72;
+            font-size: 1.1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            background: #f1f2f6;
+            padding: 8px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            gap: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 40px;
+            background: transparent;
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        /* المحتوى والصفحات */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الكروت والبطاقات */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-right: 6px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* أزرار التنقل السفلية */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px stroke #f1f2f6;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-next {
+            background: linear-gradient(45deg, var(--emerald), #55efc4);
+            color: white;
+            margin-right: auto;
+        }
+
+        .btn-prev {
+            background: #dfe6e9;
+            color: var(--dark);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* نظام الاختبار - 5 مراحل */
+        .quiz-stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #dfe6e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 2;
+        }
+
+        .step-circle.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 5px rgba(108, 92, 231, 0.2);
+        }
+
+        .step-circle.completed {
+            background: var(--emerald);
+            color: white;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            text-align: right;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-light);
+            background: #f8f9ff;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background: #f0edff;
+            color: var(--primary);
+        }
+
+        /* الشهادة */
+        .certificate-box {
+            border: 10px double var(--primary);
+            padding: 40px;
+            text-align: center;
+            background: #fff;
+            border-radius: 16px;
+            position: relative;
+            background-image: radial-gradient(#6c5ce7 0.5px, transparent 0.5px);
+            background-size: 15px 15px;
+        }
+
+        .certificate-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .student-name-input {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border: 2px solid var(--primary-light);
+            border-radius: 10px;
+            margin: 15px 0;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* التجاوب */
+        @media (max-width: 768px) {
+            .nav-tabs { flex-direction: column; }
+            .container { padding: 15px; }
+            header h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- الهيدر -->
+        <header>
+            <h1><i class="fa-solid fa-graduation-cap"></i> منصة التعليميات التطبيقية التفاعلية</h1>
+            <p>مسار تعليمي تفاعلي شامل ومتكامل - بدون أي قيود</p>
+        </header>
+
+        <!-- شريط التنقل الرئيسي -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab(1)"><i class="fa-solid fa-book-open"></i> 1. برنامج المقياس</button>
+            <button class="tab-btn" onclick="switchTab(2)"><i class="fa-solid fa-chalkboard-user"></i> 2. الدرس الأول</button>
+            <button class="tab-btn" onclick="switchTab(3)"><i class="fa-solid fa-laptop-code"></i> 3. المنصة التفاعلية</button>
+            <button class="tab-btn" onclick="switchTab(4)"><i class="fa-solid fa-award"></i> 4. الشهادة</button>
+        </div>
+
+        <!-- الصفحة 1: برنامج المقياس -->
+        <div id="page-1" class="page active">
+            <div class="card">
+                <h2><i class="fa-solid fa-list-check"></i> محاور المقياس التعليمي</h2>
+                <p>يرتكز مقياس التعليميات التطبيقية على دراسة استراتيجيات التدريس الحديثة وكيفية تطبيقها في البيئة التعليمية:</p>
+                <br>
+                <ul style="padding-right: 20px; line-height: 2;">
+                    <li><strong>المحور الأول:</strong> مدخل إلى التعليميات المفاهيم والأهداف.</li>
+                    <li><strong>المحور الثاني:</strong> عناصر التعليمية وأنوعها.</li>
+                    <li><strong>المحور الثالث:</strong> علاقة التعليمية بالعلوم الأخرى (اللسانيات، علم النفس، علم الاجتماع، البيداغوجيا).</li>
+                    <li><strong>المحور الرابع:</strong> التقييم والتقويم في العملية التعليمية.</li>
+                </ul>
+            </div>
+
+            <div class="navigation-buttons">
+                <div></div>
+                <button class="btn btn-next" onclick="switchTab(2)">الدرس الأول <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </div>
+
+        <!-- الصفحة 2: الدرس الأول -->
+        <div id="page-2" class="page">
+            <!-- 1. مفهوم التعليمية -->
+            <div class="card">
+                <h2><i class="fa-solid fa-book-bookmark"></i> 1. مفهوم التعليمية (Didactique)</h2>
+                <p style="line-height: 1.8;">
+                    التعليميات (الديداكتيك) هي العلم الذي يهتم بالدراسة العلمية لطرق ونشاطات وتدريس المعارف، وكيفية التخطيط للوضعيات التعليمية وتنظيمها بهدف تسهيل عملية التعلم ونقل المعرفة من مجالها الأكاديمي إلى المجال التعليمي.
+                </p>
+            </div>
+            
+            <!-- 2. عناصر التعليمية -->
+            <div class="card" style="border-right-color: var(--secondary);">
+                <h2><i class="fa-solid fa-shapes"></i> 2. عناصر التعليمية (المثلث التعليمي)</h2>
+                <p style="line-height: 1.8;">
+                    تتشكل العملية التعليمية من ثلاثة عناصر جوهرية مترابطة تُعرف بـ <strong>المثلث الديداكتيكي</strong>:
+                </p>
+                <br>
+                <ul style="padding-right: 20px; line-height: 2;">
+                    <li><strong>المعلم (القطب البيداغوجي):</strong> الموجه والمخطط للوضعيات التعليمية.</li>
+                    <li><strong>المتعلم (القطب السيكولوجي):</strong> الفاعل الرئيسي الذي يبني معرفته بنفسه.</li>
+                    <li><strong>المعرفة (القطب الابستمولوجي):</strong> المحتوى الدراسي الخاضع للنقل الديداكتيكي.</li>
+                </ul>
+            </div>
+
+            <!-- 3. أنواع التعليمية -->
+            <div class="card" style="border-right-color: var(--accent-pink);">
+                <h2><i class="fa-solid fa-layer-group"></i> 3. أنواع التعليمية</h2>
+                <ul style="padding-right: 20px; line-height: 2;">
+                    <li><strong>التعليمية العامة (Didactique Générale):</strong> تهتم بالقوانين المبادئ والنظريات العامة للتدريس بغض النظر عن طبيعة المادة.</li>
+                    <li><strong>التعليمية الخاصة / التطبيقية (Didactique Spécifique):</strong> تهتم بطرق واستراتيجيات تدريس مادة معينة (مثل تعليمية اللغة العربية، تعليمية الرياضيات...).</li>
+                </ul>
+            </div>
+
+            <!-- 4. علاقة التعليمية بالعلوم الأخرى -->
+            <div class="card" style="border-right-color: var(--emerald);">
+                <h2><i class="fa-solid fa-network-wired"></i> 4. علاقة التعليمية بالعلوم الأخرى</h2>
+                <ul style="padding-right: 20px; line-height: 2;">
+                    <li><strong>باللسانيات:</strong> تمد اللسانيات التعليميةَ بالمادة اللغوية المحللة والقواعد لتسهيل تدرجها وتدريسها.</li>
+                    <li><strong>بعلم النفس:</strong> يستفيد المدرس من علم النفس (خاصة علم النفس المعرفي والنمو) لفهم قدرات المتعلم ومراحل نموه العقلي.</li>
+                    <li><strong>بعلم الاجتماع:</strong> يساعد في فهم التفاعل الاجتماعي داخل الفصل والوسط الاجتماعي والثقافي للمتعلم.</li>
+                    <li><strong>بالبيداغوجيا:</strong> البيداغوجيا هي الإطار العام والغايات التربوية والأساليب، بينما التعليمية تُركز أكثر على تكييف المحتوى المادي التخصصي للتعليم.</li>
+                </ul>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="btn btn-prev" onclick="switchTab(1)"><i class="fa-solid fa-arrow-right"></i> السابق</button>
+                <button class="btn btn-next" onclick="switchTab(3)">المنصة التفاعلية (الاختبار) <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </div>
+
+        <!-- الصفحة 3: المنصة التفاعلية والاختبار -->
+        <div id="page-3" class="page">
+            <!-- موجه المراحل الـ 5 -->
+            <div class="quiz-stepper">
+                <div class="step-circle active" onclick="goToQuizStep(0)">1</div>
+                <div class="step-circle" onclick="goToQuizStep(1)">2</div>
+                <div class="step-circle" onclick="goToQuizStep(2)">3</div>
+                <div class="step-circle" onclick="goToQuizStep(3)">4</div>
+                <div class="step-circle" onclick="goToQuizStep(4)">5</div>
+            </div>
+
+            <div class="card" id="quiz-card">
+                <h2 id="question-number">المرحلة 1 من 5</h2>
+                <h3 id="question-text" style="margin-top: 15px; font-weight: 700;">جاري تحميل السؤال...</h3>
+                
+                <div class="options-container" id="options-container">
+                    <!-- خيارات الإجابة -->
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="btn btn-prev" id="quiz-prev-btn" onclick="prevQuizStep()"><i class="fa-solid fa-arrow-right"></i> السؤال السابق</button>
+                <button class="btn btn-next" id="quiz-next-btn" onclick="nextQuizStep()">السؤال التالي <i class="fa-solid fa-arrow-left"></i></button>
+            </div>
+        </div>
+
+        <!-- الصفحة 4: الشهادة -->
+        <div id="page-4" class="page">
+            <div class="certificate-box">
+                <i class="fa-solid fa-ribbon" style="font-size: 3rem; color: var(--accent-yellow); margin-bottom: 10px;"></i>
+                <div class="certificate-title">شهادة إتمام ومواظبة</div>
+                <p>تشهد منصة التعليميات التطبيقية بأن الطالب(ة):</p>
+                <br>
+                <input type="text" id="studentName" class="student-name-input" placeholder="أدخل اسمك الكامل هنا" oninput="updateCertName()">
+                <br>
+                <p style="margin-top: 15px;">قد أتم بنجاح كافّة متطلبات المقياس واجتاز الاختبارات التفاعلية الخمسة بنجاح.</p>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-around; font-weight: 700; color: #636e72;">
+                    <div>الدرجة: <span id="finalScore" style="color: var(--emerald);">100%</span></div>
+                    <div>التاريخ: <span id="certDate"></span></div>
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="btn btn-prev" onclick="switchTab(3)"><i class="fa-solid fa-arrow-right"></i> العودة للاختبارات</button>
+                <button class="btn btn-next" onclick="window.print()"><i class="fa-solid fa-print"></i> طباعة الشهادة</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // إدارة الصفحات والتنقل
+        let currentTab = 1;
+
+        function switchTab(tabIndex) {
+            currentTab = tabIndex;
+            document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+                btn.classList.toggle('active', index + 1 === tabIndex);
+            });
+
+            document.querySelectorAll('.page').forEach((page, index) => {
+                page.classList.toggle('active', index + 1 === tabIndex);
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // أسئلة الاختبار الـ 5 المترابطة بالدرس بالكامل
+        const quizData = [
+            {
+                question: "ما هو التعريف الأنسب لـ 'التعليمية' (Didactique)؟",
+                options: [
+                    "العلم الذي يدرس الشروط وطرق نقل المعارف وتخطيط الوضعيات التعليمية",
+                    "الإشراف الإداري على المدارس والجامعات",
+                    "علم يختص بتصميم المباني والمرافق التعليمية فقط",
+                    "مراعاة الجانب النفسي للطفل دون الاهتمام بالمعرفة"
+                ],
+                correct: 0
+            },
+            {
+                question: "ما هي أقطاب المثلث الديداكتيكي الثلاثة؟",
+                options: [
+                    "المدير، المفتش، الوزارة",
+                    "المعلم، المتعلم، المعرفة",
+                    "الكتاب المدرسي، الوسائل التعليمية، القاعة",
+                    "البيداغوجيا، اللسانيات، علم النفس"
+                ],
+                correct: 1
+            },
+            {
+                question: "ما الفرق الأساسي بين التعليمية العامة والتعليمية الخاصة؟",
+                options: [
+                    "التعليمية العامة للتعليم الابتدائي والخاصة للجامعي",
+                    "التعليمية العامة للطلاب والخاصة للمعلمين",
+                    "التعليمية العامة تهتم بالمبادئ المشتركة، بينما الخاصة تهتم بتدريس مادة معينة",
+                    "لا يوجد أي فرق بينهما"
+                ],
+                correct: 2
+            },
+            {
+                question: "كيف يستفيد علم التعليمية من علم النفس المعرفي وعلم النفس النمو؟",
+                options: [
+                    "في تحديد مرتبات المعلمين",
+                    "في فهم القدرات العقلية ومراحل نمو المتعلم لتكييف التدريس",
+                    "في اختيار الألوان المناسبة لجدران الصف",
+                    "في ضبط القوانين والتشريعات المدرسية"
+                ],
+                correct: 1
+            },
+            {
+                question: "ما هي العلاقة التكاملية بين البيداغوجيا والتعليمية؟",
+                options: [
+                    "البيداغوجيا تهتم بالغايات والأساليب العامة، والتعليمية تركّز على بنية المحتوى والمادة المُمدرسة",
+                    "البيداغوجيا تلغي دور التعليمية في التدريس",
+                    "التعليمية تهتم بالتربية الأخلاقية، والبيداغوجيا تهتم بالعلوم فقط",
+                    "التعليمية تدرس علم الاجتماع والبيداغوجيا تدرس علم النفس"
+                ],
+                correct: 0
+            }
+        ];
+
+        let currentQuizStep = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+
+        function renderQuizStep() {
+            const data = quizData[currentQuizStep];
+            document.getElementById('question-number').innerText = `المرحلة ${currentQuizStep + 1} من 5`;
+            document.getElementById('question-text').innerText = data.question;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                if (userAnswers[currentQuizStep] === idx) {
+                    btn.classList.add('selected');
+                }
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // تحديث أزرار التنقل
+            document.getElementById('quiz-prev-btn').style.visibility = currentQuizStep === 0 ? 'hidden' : 'visible';
+            
+            const nextBtn = document.getElementById('quiz-next-btn');
+            if (currentQuizStep === quizData.length - 1) {
+                nextBtn.innerHTML = 'إنهاء وتوليد الشهادة <i class="fa-solid fa-award"></i>';
+            } else {
+                nextBtn.innerHTML = 'السؤال التالي <i class="fa-solid fa-arrow-left"></i>';
+            }
+
+            // تحديث مؤشرات الخطوات
+            document.querySelectorAll('.step-circle').forEach((circle, idx) => {
+                circle.classList.toggle('active', idx === currentQuizStep);
+                circle.classList.toggle('completed', userAnswers[idx] !== null);
+            });
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuizStep] = index;
+            renderQuizStep();
+        }
+
+        function nextQuizStep() {
+            if (currentQuizStep < quizData.length - 1) {
+                currentQuizStep++;
+                renderQuizStep();
+            } else {
+                calculateScore();
+                switchTab(4);
+            }
+        }
+
+        function prevQuizStep() {
+            if (currentQuizStep > 0) {
+                currentQuizStep--;
+                renderQuizStep();
+            }
+        }
+
+        function goToQuizStep(stepIndex) {
+            currentQuizStep = stepIndex;
+            renderQuizStep();
+        }
+
+        function calculateScore() {
+            let correctCount = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === quizData[idx].correct) {
+                    correctCount++;
+                }
+            });
+            const scorePercent = Math.round((correctCount / quizData.length) * 100);
+            document.getElementById('finalScore').innerText = `${scorePercent}%`;
+        }
+
+        function updateCertName() {
+            // يمكن إضافة خصائص ديناميكية هنا إذا لزم الأمر
+        }
+
+        // تهيئة التطبيق عند الفتح
+        window.onload = () => {
+            renderQuizStep();
+            document.getElementById('certDate').innerText = new Date().toLocaleDateString('ar-DZ');
+        };
+    </script>
+</body>
+</html>
